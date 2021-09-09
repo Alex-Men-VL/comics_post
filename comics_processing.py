@@ -1,7 +1,7 @@
 import os
+import urllib.parse
 
 import requests
-import urllib.parse
 
 
 def download_comics(comics_number):
@@ -30,5 +30,7 @@ def get_img(url, name):
 def get_comics_quantity():
     last_comics_url = 'https://xkcd.com/info.0.json'
     response = requests.get(last_comics_url)
+    response.raise_for_status()
+
     comics_quantity = response.json()['num']
     return comics_quantity
