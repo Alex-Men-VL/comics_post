@@ -22,7 +22,7 @@ def main():
         comics_name = comics_processing.get_img_name(comics['img'])
         comics_comment = comics['alt']
 
-        comics_processing.get_img(comics['img'], comics_name, path)
+        comics_processing.download_image(comics['img'], comics_name)
     except (ConnectionError, InvalidURL, HTTPError) as error:
         logging.error(f"{error}\nCan't get data from xkcd.com.")
     

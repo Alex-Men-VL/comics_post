@@ -18,7 +18,7 @@ def get_img_name(url):
     return image_name
 
 
-def get_img(url, name, path):
+def download_image(url, comics_name):
     response = requests.get(url)
     response.raise_for_status()
 
