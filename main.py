@@ -46,8 +46,8 @@ def main():
                        access_token, api_version)
     except (ConnectionError, InvalidURL, HTTPError) as error:
         logging.error(f"{error}Can't get data from api.vk.com")
-
-    shutil.rmtree(path)
+    finally:
+        shutil.rmtree(path)
 
 
 if __name__ == '__main__':
