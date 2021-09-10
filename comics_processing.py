@@ -23,7 +23,7 @@ def get_img(url, name, path):
     response.raise_for_status()
 
     img_raw = response.content
-    with open(f'{path}/{name}', 'wb') as file:
+    with open(comics_name, 'wb') as file:
         file.write(img_raw)
 
 
