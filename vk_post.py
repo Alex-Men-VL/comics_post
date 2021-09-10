@@ -1,6 +1,26 @@
 import requests
 
 
+class VkApiError(Exception):
+    pass
+
+
+def process_vk_response(url, params=None, files=None):
+    if params:
+        response = requests.get(url, params=params)
+    else:
+        response = requests.get(url, files=files)
+    response.raise_for_status()
+
+    vk_response = response.json()
+    if 'error' in vk_response:
+        error_code = vk_response['error']['error_code']
+        error_message = vk_response['error']['error_msg']
+        raise VkApiError(f'\nError code: {error_code};\n'
+                         f'Error message: {error_message}')
+    return vk_response
+
+
 def get_upload_url(group_id, access_token, api_version):
     vk_url = 'https://api.vk.com/method/photos.getWallUploadServer'
     params = {
@@ -8,10 +28,9 @@ def get_upload_url(group_id, access_token, api_version):
         'access_token': access_token,
         'v': api_version,
     }
-    response = requests.get(vk_url, params=params)
-    response.raise_for_status()
 
-    upload_url = response.json()['response']['upload_url']
+    vk_response = process_vk_response(vk_url, params=params)
+    upload_url = vk_response['response']['upload_url']
     return upload_url
 
 
@@ -39,10 +58,9 @@ def save_comics_in_album(
         'hash': image_hash,
         'v': api_version,
     }
-    response = requests.post(vk_url, params=params)
-    response.raise_for_status()
+    vk_response = process_vk_response(vk_url, params=params)
 
-    response_raw = response.json()['response'][0]
+    response_raw = vk_response['response'][0]
     media_id, owner_id = response_raw['id'], response_raw['owner_id']
     return media_id, owner_id
 
@@ -59,8 +77,7 @@ def publish_comics(comment, group_id, access_token, api_version,
         'message': comment,
         'v': api_version,
     }
-    response = requests.post(vk_url, params=params)
-    response.raise_for_status()
+    process_vk_response(vk_url, params=params)
 
 
 def post_comics_in_group(comics_name, comics_comment, group_id, access_token,
