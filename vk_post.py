@@ -1,12 +1,12 @@
 import requests
 
 
-def get_upload_url(group_id, access_token, API_version):
+def get_upload_url(group_id, access_token, api_version):
     vk_url = 'https://api.vk.com/method/photos.getWallUploadServer'
     params = {
         'group_id': group_id,
         'access_token': access_token,
-        'v': API_version,
+        'v': api_version,
     }
     response = requests.get(vk_url, params=params)
     response.raise_for_status()
@@ -36,8 +36,8 @@ def save_comics_in_album(
         'access_token': access_token,
         'server': server,
         'photo': photo,
-        'hash': hash,
-        'v': API_version,
+        'hash': image_hash,
+        'v': api_version,
     }
     response = requests.post(vk_url, params=params)
     response.raise_for_status()
