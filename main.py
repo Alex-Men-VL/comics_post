@@ -5,7 +5,7 @@ from random import randint
 import comics_processing
 from dotenv import load_dotenv
 from requests.exceptions import ConnectionError, HTTPError, InvalidURL
-from vk_post import publish_comics
+from vk_post import post_comics_in_group
 
 
 def main():
@@ -27,8 +27,8 @@ def main():
         logging.error(f"{error}\nCan't get data from xkcd.com.")
     
     try:
-        publish_comics(comics_name, comics_comment, group_id,
-                       access_token, api_version)
+        post_comics_in_group(comics_name, comics_comment, group_id,
+                             access_token, api_version)
     except (ConnectionError, InvalidURL, HTTPError) as error:
         logging.error(f"{error}\nCan't get data from api.vk.com")
     finally:

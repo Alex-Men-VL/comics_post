@@ -15,8 +15,7 @@ def get_upload_url(group_id, access_token, API_version):
     return upload_url
 
 
-def upload_comics_on_server(comics_name, group_id, access_token, API_version):
-    upload_url = get_upload_url(group_id, access_token, API_version)
+def upload_comics_on_server(comics_name, upload_url):
     with open(comics_name, 'rb') as file:
         files = {
             'photo': file,
@@ -28,9 +27,9 @@ def upload_comics_on_server(comics_name, group_id, access_token, API_version):
         return response_fields
 
 
-def save_comics_in_album(comics, group_id, access_token, API_version):
-    server, photo, hash = upload_comics_on_server(comics, group_id,
-                                                  access_token, API_version)
+def save_comics_in_album(
+        server, photo, image_hash, group_id,
+        access_token, api_version):
     vk_url = 'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
         'group_id': group_id,
@@ -47,9 +46,8 @@ def save_comics_in_album(comics, group_id, access_token, API_version):
     return response_raw['id'], response_raw['owner_id']
 
 
-def publish_comics(comics, comment, group_id, access_token, API_version):
-    media_id, owner_id = save_comics_in_album(comics, group_id,
-                                              access_token, API_version)
+def publish_comics(comment, group_id, access_token, api_version,
+                   media_id, owner_id):
     vk_url = 'https://api.vk.com/method/wall.post'
     attachments = f'photo{owner_id}_{media_id}'
     params = {
@@ -58,7 +56,20 @@ def publish_comics(comics, comment, group_id, access_token, API_version):
         'from_group': 1,  # publish on behalf of the group
         'attachments': attachments,
         'message': comment,
-        'v': API_version,
+        'v': api_version,
     }
     response = requests.post(vk_url, params=params)
     response.raise_for_status()
+
+
+def post_comics_in_group(comics_name, comics_comment, group_id, access_token,
+                         api_version):
+    upload_url = get_upload_url(group_id, access_token, api_version)
+    server, photo, image_hash = upload_comics_on_server(
+        comics_name, upload_url)
+    media_id, owner_id = save_comics_in_album(server, photo, image_hash,
+                                              group_id, access_token,
+                                              api_version)
+
+    publish_comics(comics_comment, group_id, access_token, api_version,
+                   media_id, owner_id)
