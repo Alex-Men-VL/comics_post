@@ -23,7 +23,7 @@ def main():
     comics_number = randint(1, comics_quantity)
 
     try:
-        comics = comics_processing.download_comics(comics_number)
+        comics = comics_processing.get_comics(comics_number)
     except (ConnectionError, InvalidURL, HTTPError) as err:
         logging.error(f"{err}\nCan't get data from "
                       f"https://xkcd.com/{comics_number}/info.0.json.")

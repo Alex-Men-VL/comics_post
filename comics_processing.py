@@ -4,7 +4,7 @@ import urllib.parse
 import requests
 
 
-def download_comics(comics_number):
+def get_comics(comics_number):
     url = f'https://xkcd.com/{comics_number}/info.0.json'
     response = requests.get(url)
     response.raise_for_status()
