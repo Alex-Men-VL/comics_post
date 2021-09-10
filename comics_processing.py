@@ -18,12 +18,12 @@ def get_img_name(url):
     return image_name
 
 
-def get_img(url, name):
+def get_img(url, name, path):
     response = requests.get(url)
     response.raise_for_status()
 
     img_raw = response.content
-    with open(f'images/{name}', 'wb') as file:
+    with open(f'{path}/{name}', 'wb') as file:
         file.write(img_raw)
 
 

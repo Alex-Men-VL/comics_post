@@ -15,9 +15,9 @@ def get_upload_url(group_id, access_token, API_version):
     return upload_url
 
 
-def upload_comics_on_server(comics, group_id, access_token, API_version):
+def upload_comics_on_server(comics, path, group_id, access_token, API_version):
     upload_url = get_upload_url(group_id, access_token, API_version)
-    with open(f'images/{comics}', 'rb') as file:
+    with open(f'{path}/{comics}', 'rb') as file:
         files = {
             'photo': file,
         }
@@ -28,8 +28,8 @@ def upload_comics_on_server(comics, group_id, access_token, API_version):
         return response_fields
 
 
-def save_comics_in_album(comics, group_id, access_token, API_version):
-    server, photo, hash = upload_comics_on_server(comics, group_id,
+def save_comics_in_album(comics, path, group_id, access_token, API_version):
+    server, photo, hash = upload_comics_on_server(comics, path, group_id,
                                                   access_token, API_version)
     vk_url = 'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
@@ -47,8 +47,8 @@ def save_comics_in_album(comics, group_id, access_token, API_version):
     return response_raw['id'], response_raw['owner_id']
 
 
-def publish_comics(comics, comment, group_id, access_token, API_version):
-    media_id, owner_id = save_comics_in_album(comics, group_id,
+def publish_comics(comics, path, comment, group_id, access_token, API_version):
+    media_id, owner_id = save_comics_in_album(comics, path, group_id,
                                               access_token, API_version)
     vk_url = 'https://api.vk.com/method/wall.post'
     attachments = f'photo{owner_id}_{media_id}'
