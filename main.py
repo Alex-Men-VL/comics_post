@@ -14,7 +14,7 @@ def main():
     load_dotenv()
     group_id = os.getenv('GROUP_ID')
     access_token = os.getenv('VK_TOKEN')
-    API_version = 5.131
+    api_version = 5.131
 
     Path('images').mkdir(exist_ok=True)
 
@@ -32,7 +32,7 @@ def main():
     
     try:
         publish_comics(comics_name, comics_comment, group_id,
-                       access_token, API_version)
+                       access_token, api_version)
     except (ConnectionError, InvalidURL, HTTPError) as error:
         logging.error(f"{error}Can't get data from api.vk.com")
 
