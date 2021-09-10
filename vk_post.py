@@ -23,8 +23,8 @@ def upload_comics_on_server(comics_name, upload_url):
         response = requests.post(upload_url, files=files)
         response.raise_for_status()
 
-        response_fields = list(response.json().values())
-        return response_fields
+    server, photo, image_hash = list(response.json().values())
+    return server, photo, image_hash
 
 
 def save_comics_in_album(
@@ -43,7 +43,8 @@ def save_comics_in_album(
     response.raise_for_status()
 
     response_raw = response.json()['response'][0]
-    return response_raw['id'], response_raw['owner_id']
+    media_id, owner_id = response_raw['id'], response_raw['owner_id']
+    return media_id, owner_id
 
 
 def publish_comics(comment, group_id, access_token, api_version,
