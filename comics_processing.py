@@ -12,7 +12,7 @@ def download_comics(comics_number):
     return response.json()
 
 
-def get_img_name(url):
+def get_image_name(url):
     image_path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
     image_name = os.path.split(image_path)[-1]
     return image_name
