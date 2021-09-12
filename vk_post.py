@@ -5,11 +5,11 @@ class VkApiError(Exception):
     pass
 
 
-def process_vk_response(url, params=None, files=None):
+def make_vk_response(url, params=None, files=None):
     if params:
         response = requests.get(url, params=params)
     else:
-        response = requests.get(url, files=files)
+        response = requests.post(url, files=files)
     response.raise_for_status()
 
     vk_response = response.json()
@@ -29,7 +29,7 @@ def get_upload_url(group_id, access_token, api_version):
         'v': api_version,
     }
 
-    vk_response = process_vk_response(vk_url, params=params)
+    vk_response = make_vk_response(vk_url, params=params)
     upload_url = vk_response['response']['upload_url']
     return upload_url
 
@@ -39,8 +39,7 @@ def upload_comics_on_server(comics_name, upload_url):
         files = {
             'photo': file,
         }
-        response = requests.post(upload_url, files=files)
-        response.raise_for_status()
+        vk_response = make_vk_response(upload_url, files=files)
 
     server, photo, image_hash = list(response.json().values())
     return server, photo, image_hash
@@ -58,7 +57,7 @@ def save_comics_in_album(
         'hash': image_hash,
         'v': api_version,
     }
-    vk_response = process_vk_response(vk_url, params=params)
+    vk_response = make_vk_response(vk_url, params=params)
 
     response_raw = vk_response['response'][0]
     media_id, owner_id = response_raw['id'], response_raw['owner_id']
@@ -77,7 +76,7 @@ def publish_comics(comment, group_id, access_token, api_version,
         'message': comment,
         'v': api_version,
     }
-    process_vk_response(vk_url, params=params)
+    make_vk_response(vk_url, params=params)
 
 
 def post_comics_in_group(comics_name, comics_comment, group_id, access_token,
