@@ -5,7 +5,7 @@ from random import randint
 import comics_processing
 from dotenv import load_dotenv
 from requests.exceptions import ConnectionError, HTTPError, InvalidURL
-from vk_post import post_comics_in_group
+from vk_post import post_comics_in_group, VkApiError
 
 
 def main():
@@ -34,12 +34,15 @@ def main():
         comics_processing.download_image(image_url, comics_name)
     except (ConnectionError, InvalidURL, HTTPError) as err:
         logging.error(f"{err}\nCan't load image from {image_url}.")
+        return
 
     try:
         post_comics_in_group(comics_name, comics_comment, group_id,
                              access_token, api_version)
-    except (ConnectionError, InvalidURL, HTTPError) as error:
-        logging.error(f"{error}\nCan't get data from api.vk.com")
+    except (ConnectionError, InvalidURL, HTTPError) as err:
+        logging.error(f"{err}\nCan't get data from api.vk.com")
+    except VkApiError as err:
+        logging.error(err)
     finally:
         os.remove(comics_name)
 
