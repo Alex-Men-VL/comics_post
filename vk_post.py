@@ -41,7 +41,7 @@ def upload_comics_on_server(comics_name, upload_url):
         }
         vk_response = make_vk_response(upload_url, files=files)
 
-    server, photo, image_hash = list(response.json().values())
+    server, photo, image_hash = vk_response.values()
     return server, photo, image_hash
 
 
