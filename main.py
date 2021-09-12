@@ -5,7 +5,7 @@ from random import randint
 import comics_processing
 from dotenv import load_dotenv
 from requests.exceptions import ConnectionError, HTTPError, InvalidURL
-from vk_post import post_comics_in_group, VkApiError
+from vk_post import VkApiError, post_comics_in_group
 
 
 def main():
